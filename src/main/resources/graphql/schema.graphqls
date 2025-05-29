@@ -1,0 +1,15 @@
+type Query {
+    document(id: ID!): Document
+}
+
+type Mutation  {
+    document(title: String!, description:String!): Document
+}
+
+type Document {
+    id: ID!
+    title: String!
+    description: String!
+    state: String!
+    createdDate: String!
+}

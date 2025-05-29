@@ -1,0 +1,21 @@
+logging:
+  level:
+    com.innogrid: debug
+    org.jooq.Constants: off
+    org.jooq.tools.LoggerListener: debug
+
+spring:
+  graphql:
+    path: /graphql
+    graphiql:
+      path: /gui
+    cors:
+      allowed-headers: '*'
+      allowed-methods: '*'
+      allowed-origin-patterns: '*'
+      allow-credentials: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/example?options=-c%20timezone=Asia/Seoul
+    username: example
+    password: secret
