@@ -6,14 +6,12 @@ import org.springframework.statemachine.annotation.*;
 
 @WithStateMachine
 @Slf4j
-public class TransitionConfig {
+public class TransitionListener {
 
     @OnTransition(source = "DRAFT", target = "DOC_SUBMITTED" )
     public void onTransition(StateContext<Object, Object> context) {
-
         log.info("onTransition {}", context.getEvent());
     }
-
 
     @OnTransitionStart
     public void onTransitionStart(StateContext<Object, Object> context) {

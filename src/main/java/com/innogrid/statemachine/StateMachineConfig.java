@@ -1,5 +1,6 @@
 package com.innogrid.statemachine;
 
+import com.innogrid.service.IDGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -16,12 +17,18 @@ import java.util.EnumSet;
 @EnableStateMachineFactory
 public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Events> {
 
+    final IDGenerator idGenerator;
+
+    public StateMachineConfig(IDGenerator idGenerator) {
+        this.idGenerator = idGenerator;
+    }
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<States, Events> config) throws Exception {
         config
                 .withConfiguration()
                 .autoStartup(true)
+                .machineId(idGenerator.generate())
                 .listener(new StateMachineEventListener());
     }
 

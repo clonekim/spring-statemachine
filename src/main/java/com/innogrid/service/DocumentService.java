@@ -26,7 +26,7 @@ public class DocumentService {
 
     StateMachineFactory<States, Events> factory;
     StateMachinePersister<States, Events, String> persister;
-    IDGenerator idGenerator;
+
     DocumentDao documentDao;
     DocumentStateDao documentStateDao;
 
@@ -35,19 +35,19 @@ public class DocumentService {
     @Transactional
     public Document create(Document document) {
 
-
-        var machineId = idGenerator.generate();
-        StateMachine<States, Events> stateMachine = factory.getStateMachine(machineId);
+        StateMachine<States, Events> stateMachine = factory.getStateMachine();
         stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Events.SUBMIT).build()))
                 .blockLast();
 
-        persister.persist(stateMachine, machineId);
+        persister.persist(stateMachine, stateMachine.getId());
 
         var record = new DocumentRecord();
         record.from(document);
         document.setId(documentDao.insert(record).getId());
         document.setState(stateMachine.getState().getId());
-        documentStateDao.insert(new DocumentStateRecord().setMachineId(machineId).setDocId(document.getId()));
+        documentStateDao.insert(new DocumentStateRecord()
+                .setMachineId(stateMachine.getId())
+                .setDocId(document.getId()));
 
         return document;
 
