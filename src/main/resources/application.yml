@@ -19,3 +19,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/example?options=-c%20timezone=Asia/Seoul
     username: example
     password: secret
+  jooq:
+    sql-dialect: postgres
+  threads:
+    virtual:
+      enabled: true
+  flyway:
+    enabled: true

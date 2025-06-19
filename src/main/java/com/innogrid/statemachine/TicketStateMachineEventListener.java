@@ -7,27 +7,28 @@ import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
 @Slf4j
-public class StateMachineEventListener extends StateMachineListenerAdapter<States, Events> {
+public class TicketStateMachineEventListener extends StateMachineListenerAdapter<States, Events> {
 
     @Override
     public void stateEntered(State<States, Events> state) {
-        log.info("State entered: {}", state.getId());
+        log.info("!State entered: {} {}", state.getId(), state.getStates());
     }
 
 
     @Override
     public void stateMachineStarted(StateMachine<States, Events> stateMachine) {
-        log.info("StateMachine Started: {}", stateMachine.getId());
+        log.info("!StateMachine Started: {}", stateMachine);
     }
 
 
     @Override
     public void stateMachineError(StateMachine<States, Events> stateMachine, Exception exception) {
-       log.error("StateMachine Error", exception);
+        log.error("!StateMachine Error", exception);
     }
 
     @Override
     public void eventNotAccepted(Message<Events> event) {
-       log.error("Event Not Accepted");
+        log.debug(event.toString());
+        log.error("!Event Not Accepted");
     }
 }

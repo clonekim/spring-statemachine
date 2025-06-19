@@ -8,30 +8,30 @@ import org.springframework.statemachine.annotation.*;
 @Slf4j
 public class TransitionListener {
 
-    @OnTransition(source = "DRAFT", target = "DOC_SUBMITTED" )
+    @OnTransition
     public void onTransition(StateContext<Object, Object> context) {
-        log.info("onTransition {}", context.getEvent());
+        log.info("-> onTransition {}", context.getEvent());
     }
 
     @OnTransitionStart
     public void onTransitionStart(StateContext<Object, Object> context) {
-        log.info("onTransitionStart");
+        log.info("-> onTransitionStart {}", context.getEvent());
     }
 
     @OnTransitionEnd
     public void onTransitionEnd(StateContext<Object, Object> context) {
-        log.info("onTransitionEnd");
+        log.info("-> onTransitionEnd {}", context.getEvent());
     }
 
 
     @OnStateMachineError
     public void onStateMachineError(StateContext<Object, Object> context) {
-        log.info("onStateMachineError");
+        log.info("-> onStateMachineError {}", context.getEvent());
     }
 
 
     @OnEventNotAccepted
     public void onEventNotAccepted(StateContext<Object, Object> context) {
-        log.info("onEventNotAccepted");
+        log.info("-> onEventNotAccepted {}", context.getEvent() );
     }
 }

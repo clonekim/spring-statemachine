@@ -1,3 +1,4 @@
+import org.jooq.meta.jaxb.ForcedType
 
 plugins {
     java
@@ -31,6 +32,8 @@ repositories {
     mavenCentral()
 }
 
+val mockitoAgent = configurations.create("mockitoAgent")
+
 val versions = mapOf(
     "statemachine" to "4.0.0"
 )
@@ -43,7 +46,8 @@ dependencyManagement {
 
 dependencies {
     implementation("org.springframework.statemachine:spring-statemachine-starter")
-    implementation("org.springframework.statemachine:spring-statemachine-recipes-common")
+//    implementation("org.springframework.statemachine:spring-statemachine-recipes-common")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -62,10 +66,12 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     jooqCodegen("org.postgresql:postgresql")
+    mockitoAgent("org.mockito:mockito-core:5.14.2") { isTransitive = false }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs("-javaagent:${mockitoAgent.asPath}", "-Xshare:off", "-XX:+EnableDynamicAgentLoading")
 }
 
 tasks.bootJar {
@@ -88,6 +94,38 @@ jooq {
                 inputSchema = "public"
                 includes = ".*"
                 logSlowQueriesAfterSeconds = 20
+                recordTimestampFields = "updated_at"
+                recordVersionFields = "version"
+
+
+                forcedTypes.addAll(
+                    listOf(
+
+                        ForcedType().apply {
+                            userType = "com.innogrid.model.VoteAnswer"
+                            includeExpression = "ticket_reviewer\\.vote"
+                            converter = "com.innogrid.dao.converter.VoteAnswerConverter"
+                        },
+
+                        ForcedType().apply {
+                            userType = "com.innogrid.statemachine.States"
+                            includeExpression = "state"
+                            converter = "com.innogrid.dao.converter.StatemachineStateConverter"
+                        },
+
+                        ForcedType().apply {
+                            userType = "com.innogrid.statemachine.Events"
+                            includeExpression = "state_machine\\.event"
+                            converter = "com.innogrid.dao.converter.StatemachineEventConverter"
+                        },
+
+                        ForcedType().apply {
+                            userType = "java.util.Map<Object, Object>"
+                            includeExpression = "state_machine\\.extended_state"
+                            converter = "com.innogrid.dao.converter.ObjectMapConverter"
+                        },
+                    )
+                )
             }
 
             generate {

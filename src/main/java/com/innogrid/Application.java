@@ -15,8 +15,7 @@ public class Application {
     @Controller
     static class FaviconController {
         @GetMapping("/favicon.ico")
-        public void faviconNoProvide() {
-
+        public void noFavicon() {
         }
     }
 }

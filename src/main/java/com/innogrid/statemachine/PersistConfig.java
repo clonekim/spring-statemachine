@@ -9,7 +9,7 @@ import org.springframework.statemachine.persist.StateMachinePersister;
 public class PersistConfig {
 
     @Bean
-    public StateMachinePersister<States, Events, String> persister(JdbcStateMachinePersist persist) {
+    public StateMachinePersister<States, Events, String> persister(StateMachineJdbcPersist persist) {
         return new DefaultStateMachinePersister<>(persist);
     }
 
