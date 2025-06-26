@@ -21,9 +21,10 @@ public class RequestGuards {
         return context -> {
             log.debug("리뷰어가 존재 하는지 검증합니다.");
             try {
-                int count = context.getExtendedState().get(StateProperty.REVIEWER_COUNT, Integer.class);
-                return false;
-            }catch(NullPointerException e) {
+                int count = context.getExtendedState()
+                        .get(StateProperty.REVIEWER_COUNT, Integer.class);
+                return count > 0;
+            } catch (NullPointerException e) {
                 log.error("Not found value", e);
                 return false;
             }
